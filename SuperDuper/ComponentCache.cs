@@ -16,7 +16,10 @@ namespace SuperDuper
         {
             components.Add(component);
         }
-
+        public static void Unregister(T component) 
+        {
+            components.Remove(component);
+        }
         public static void Update(World world)
         {
             foreach (T component in components)

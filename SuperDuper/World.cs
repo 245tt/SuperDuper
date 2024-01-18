@@ -5,7 +5,7 @@ namespace SuperDuper
 {
     class World
     {
-        public bool DebugDraw = true;
+        public bool DebugDraw = false;
         int drawDistance = 2;
         public float deltaTime;
         public int seed = 123;
@@ -65,6 +65,11 @@ namespace SuperDuper
 
             //update collisions
             MoveAndCollideAll(delta);
+
+            for (int i = 0; i < entityList.Count; i++)
+            {
+                if (entityList[i].markToRemove) entityList[i].Dispose();
+            }
         }
         public void MoveAndCollideAll(float delta)
         {
@@ -100,6 +105,7 @@ namespace SuperDuper
                 Vector2 move = Vector2.Zero;
                 if (!xmoveCollision) { move.X += rb.velocity.X * delta; } else { rb.velocity.X = 0; }
                 if (!ymoveCollision) { move.Y += rb.velocity.Y * delta; } else { rb.velocity.Y = 0; }
+                if (xmoveCollision || ymoveCollision) rb.entity.OnCollide(this);
                 rb.IsGrounded = ymoveCollision;
                 rb.entity.transform.position += move;
             }
@@ -140,6 +146,20 @@ namespace SuperDuper
             for (int i = 0; i < BoxColliderComponentCache.components.Count; i++)
             {
                 Render.DrawCollider(BoxColliderComponentCache.components[i]);
+            }
+        }
+        public void Explode(Vector2 position, float force)
+        {
+            for (int y = (int)(position.Y - force - 1); y < (int)(position.Y + force + 1); y++)
+            {
+                for (int x = (int)(position.X - force - 1); x < (int)(position.X + force + 1); x++)
+                {
+                    float dist = (new Vector2(x, y) - position).Length;
+                    if (dist < force)
+                    {
+                        this.Edit(new Vector2(x, y), 0);
+                    }
+                }
             }
         }
     }

@@ -14,11 +14,30 @@ namespace SuperDuper.Items
         public string Description;
         public bool stackable;
         public short stackSize;
-        public int textureID;
-        public int GetTexture()
+        public virtual Texture? GetTexture() { return null; }
+        public virtual void Update(World world) { }
+    }
+    class ItemStack
+    {
+        public ItemBase? item;
+        public int stackSize;
+        public ItemStack(ItemBase? item, int stackSize)
         {
-            return textureID;
+            this.item = item;
+            this.stackSize = stackSize;
         }
 
+        public string GetLabel()
+        {
+            return item.Label;
+        }
+        public int GetMaxStackSize()
+        {
+            return item.stackSize;
+        }
+        public Type GetItemType() 
+        {
+            return item.GetType();
+        }
     }
 }

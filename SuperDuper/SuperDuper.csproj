@@ -20,4 +20,7 @@
     <PackageReference Include="System.Drawing.Common" Version="8.0.0" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <RunWorkingDirectory>$(SolutionDir)SuperDuper</RunWorkingDirectory>
+  </PropertyGroup>
 </Project>

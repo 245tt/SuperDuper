@@ -16,5 +16,9 @@ namespace SuperDuper.Entities
             this.texture = texture;
             SpriteComponentCache.Register(this);
         }
+        public override void DisposeComponent()
+        {
+            SpriteComponentCache.Unregister(this);
+        }
     }
 }

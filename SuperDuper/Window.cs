@@ -50,9 +50,9 @@ namespace SuperDuper
         }
         protected override void OnUpdateFrame(FrameEventArgs args)
         {
-            input.Move(KeyboardState,(float)args.Time);
-            input.UpdateMouse(normalizedMousePos);
+            input.UpdateMouse(mousePosWorldSpace,normalizedMousePos,MouseState);
             input.Update(world);
+            input.Move(KeyboardState,(float)args.Time);
             world.Update((float)args.Time);
             Camera.zoom += MouseState.ScrollDelta.Y;
 
@@ -62,7 +62,12 @@ namespace SuperDuper
                 world.DebugDraw = !world.DebugDraw;
             }
 
-            if(KeyboardState.IsKeyPressed(Keys.F))
+            if (KeyboardState.IsKeyPressed(Keys.B))
+            {
+                world.Explode(mousePosWorldSpace,5);
+            }
+
+            if (KeyboardState.IsKeyPressed(Keys.F))
                 Render.chunkWireframe = !Render.chunkWireframe;
 
             Camera.Position = player.transform.position;

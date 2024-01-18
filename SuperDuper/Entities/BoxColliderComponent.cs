@@ -16,5 +16,9 @@ namespace SuperDuper.Entities
             box = new AABB(Vector2.Zero,new Vector2(width,height));
             BoxColliderComponentCache.Register(this);
         }
+        public override void DisposeComponent()
+        {
+            BoxColliderComponentCache.Unregister(this);
+        }
     }
 }

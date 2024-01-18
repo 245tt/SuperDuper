@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SuperDuper.Entities
 {
-    class Entity
+    class Entity : IDisposable
     {
         public Guid guid;
         public string name;
@@ -19,7 +19,7 @@ namespace SuperDuper.Entities
 
         public float width = 1;
         public float height = 1;
-
+        public bool markToRemove = false;
         public Transform transform = new Transform();
 
         public Entity(string name,World world)
@@ -27,6 +27,11 @@ namespace SuperDuper.Entities
             this.name = name;
             this.world = world;
             guid = Guid.NewGuid();
+        }
+        public virtual void OnCollide(World world) { }
+        public void Destroy() 
+        {
+            markToRemove = true;
         }
         public void AddComponent(EntityComponent component)
         {
@@ -54,6 +59,20 @@ namespace SuperDuper.Entities
             {
                 return transform + parent.GetWorldTransform();
             }
+        }
+        public void AddChild(Entity child)
+        {
+            this.children.Add(child);
+            child.parent = this;
+        }
+
+        public void Dispose()
+        {
+            foreach (EntityComponent component in components) 
+            {
+                component.Dispose();
+            }
+            world.entityList.Remove(this);
         }
     }
 }

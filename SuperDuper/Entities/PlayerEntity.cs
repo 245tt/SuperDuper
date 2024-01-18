@@ -18,11 +18,12 @@ namespace SuperDuper.Entities
             this.AddComponent(new RigidbodyComponent());
             this.AddComponent(new PlayerInput());
             this.AddComponent(new BoxColliderComponent(2.9f, 5.9f));
+            this.AddComponent(new InventoryContainerComponent());
+
 
             //weapon entity
             ItemHolderEntity holder = new ItemHolderEntity("item_holder", world);
-            this.children.Add(holder);
-            holder.parent = this;
+            this.AddChild(holder);
 
         }
     }

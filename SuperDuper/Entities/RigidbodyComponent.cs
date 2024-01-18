@@ -16,9 +16,13 @@ namespace SuperDuper.Entities
             RigidbodyComponentCache.Register(this);
         }
 
+        public override void DisposeComponent()
+        {
+            RigidbodyComponentCache.Unregister(this);
+        }
+
         public override void Update(World world)
         {
-            base.Update(world);
             if (AffectedByGravity)
             {
                 velocity += world.gravity * world.deltaTime;

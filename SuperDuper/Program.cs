@@ -6,6 +6,7 @@ namespace SuperDuper
     {
         static void Main(string[] args)
         {
+
             GameWindowSettings gameWindow = new GameWindowSettings()
             {
                 UpdateFrequency = 144,
