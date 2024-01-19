@@ -17,6 +17,7 @@ namespace SuperDuper
         //Chunk chunk;
         World world;// = new World();
         Entity player;// = new Entity("dev");
+        HUD hud;
         RigidbodyComponent rb;
         PlayerInput input;
         public Window(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings) : base(gameWindowSettings, nativeWindowSettings)
@@ -24,12 +25,18 @@ namespace SuperDuper
         }
         protected override void OnLoad()
         {
-            Texture man = new Texture("Assets/man.png");
-            Texture rpg = new Texture("Assets/rpg.png");
+            Texture man = new Texture("Assets/Textures/man.png");
+            Texture rpg = new Texture("Assets/Textures/rpg.png");
+            new Texture("Assets/Textures/ItemSlot.png");
+            new Texture("Assets/Textures/slotSelector.png");
+            new Texture("Assets/Textures/rpg_rocket.png");
             world = new World();
             player = world.entityList[0];
             rb = player.GetComponent<RigidbodyComponent>();
             input = player.GetComponent<PlayerInput>();
+            hud = new HUD();
+            hud.items = player.GetComponent<InventoryContainerComponent>().container;
+
             base.OnLoad();
         }
         protected override void OnRenderFrame(FrameEventArgs args)
@@ -44,7 +51,8 @@ namespace SuperDuper
             }
 
             Render.DrawPoint(mousePosWorldSpace, new Vector3(0,1,1),4);
-
+            hud.Draw();
+            Render.DrawText(null,"abcdefg\nABCDEFG",40,Vector2.Zero,Vector3.One);
             SwapBuffers();
             base.OnRenderFrame(args);
         }
@@ -53,10 +61,10 @@ namespace SuperDuper
             input.UpdateMouse(mousePosWorldSpace,normalizedMousePos,MouseState);
             input.Update(world);
             input.Move(KeyboardState,(float)args.Time);
+            hud.currentSlot = input.currentSlot;
+            hud.Update();
             world.Update((float)args.Time);
-            Camera.zoom += MouseState.ScrollDelta.Y;
 
-            //rb.velocity = vel;
             if (KeyboardState.IsKeyPressed(Keys.F3)) 
             {
                 world.DebugDraw = !world.DebugDraw;
@@ -77,17 +85,6 @@ namespace SuperDuper
             normalizedMousePos.Y = 1.0f - (2.0f * MouseState.Position.Y) / size.Y;
             mousePosWorldSpace.X = normalizedMousePos.X * (Camera.zoom * aspectRatio) / 2 + Camera.Position.X;
             mousePosWorldSpace.Y = normalizedMousePos.Y * Camera.zoom / 2 + Camera.Position.Y;
-
-            if (MouseState.IsButtonDown(MouseButton.Left)) 
-            {
-                //chunk.Edit(mousePosWorldSpace,1,true);
-                world.Edit(mousePosWorldSpace,1);
-            }
-            if (MouseState.IsButtonDown(MouseButton.Right))
-            {
-                //chunk.Edit(mousePosWorldSpace, 0,true);
-                world.Edit(mousePosWorldSpace, 0);
-            }
 
             base.OnUpdateFrame(args);
         }

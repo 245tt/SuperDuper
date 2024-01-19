@@ -23,7 +23,7 @@ namespace SuperDuper.Entities
             RigidbodyComponent rb = new RigidbodyComponent();
             rb.AffectedByGravity = affectedByGravity;
             rb.velocity = direction.Normalized() * projectileSpeed;
-
+            this.transform.rotation = MathHelper.RadiansToDegrees(MathF.Atan2(direction.Y, direction.X));
             AddComponent(rb);
             AddComponent(new BoxColliderComponent(projectileSize, projectileSize));
             AddComponent(new SpriteComponent(null));

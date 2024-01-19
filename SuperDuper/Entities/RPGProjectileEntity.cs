@@ -12,13 +12,14 @@ namespace SuperDuper.Entities
         public RPGProjectileEntity(string name, World world, Vector2 direction) : base(name, world, direction)
         {
             this.affectedByGravity = false;
-            this.projectileSpeed = 10;
+            this.projectileSpeed = 50;
             this.projectileSize = 0.2f;
             Init();
+            this.GetComponent<SpriteComponent>().texture = Texture.GetTexture("rpg_rocket");
         }
         public override void OnCollide(World world)
         {
-            world.Explode(this.transform.position, 5);
+            world.Explode(this.transform.position, 3);
             this.Destroy();
         }
 

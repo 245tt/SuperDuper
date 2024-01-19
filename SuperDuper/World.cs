@@ -103,10 +103,13 @@ namespace SuperDuper
                     }
                 }
                 Vector2 move = Vector2.Zero;
+                if (ymoveCollision && rb.velocity.Y < 0) 
+                    rb.IsGrounded = true;
+                else rb.IsGrounded = false;
+
                 if (!xmoveCollision) { move.X += rb.velocity.X * delta; } else { rb.velocity.X = 0; }
                 if (!ymoveCollision) { move.Y += rb.velocity.Y * delta; } else { rb.velocity.Y = 0; }
                 if (xmoveCollision || ymoveCollision) rb.entity.OnCollide(this);
-                rb.IsGrounded = ymoveCollision;
                 rb.entity.transform.position += move;
             }
         }
@@ -123,7 +126,8 @@ namespace SuperDuper
             }
             for (int i = 0; i < SpriteComponentCache.components.Count; i++)
             {
-                Render.DrawSprite(SpriteComponentCache.components[i]);
+                if (SpriteComponentCache.components[i].active)
+                    Render.DrawSprite(SpriteComponentCache.components[i]);
             }
         }
 

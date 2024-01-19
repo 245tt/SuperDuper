@@ -7,7 +7,7 @@ namespace SuperDuper.Entities
     class PlayerInput : EntityComponent
     {
         InventoryContainerComponent inventory;
-        int currentSlot = 0;
+        public int currentSlot = 0;
 
         RigidbodyComponent rb;
         public float moveSpeed = 8;

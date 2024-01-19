@@ -1,10 +1,5 @@
 ﻿using OpenTK.Mathematics;
 using SuperDuper.Items;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SuperDuper.Entities
 {
@@ -14,18 +9,25 @@ namespace SuperDuper.Entities
         SpriteComponent sprite;
         public ItemHolderEntity(string name, World world) : base(name, world)
         {
-            this.transform.scale = new Vector2(4,4);
+            this.transform.scale = new Vector2(4, 4);
             sprite = new SpriteComponent(null);
             AddComponent(sprite);
         }
 
-        public void SetItem(ItemBase item) 
+        public void SetItem(ItemBase item)
         {
+            this.displayItem = item;
             if (item != null)
             {
-                this.displayItem = item;
+                sprite.active = true;
                 sprite.texture = item.GetTexture();
             }
+            else
+            {
+                sprite.active = false;
+                sprite.texture = null;
+            }
+
         }
     }
 }

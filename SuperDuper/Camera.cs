@@ -5,7 +5,7 @@ namespace SuperDuper
     static class Camera
     {
         static public Vector2 Position = Vector2.Zero;
-        public static float zoom = 10;
+        public static float zoom = 30;
         
         static public Matrix4 GetProjectionMatrix()
         {

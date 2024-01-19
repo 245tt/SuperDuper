@@ -8,8 +8,15 @@ using System.Threading.Tasks;
 
 namespace SuperDuper.Items
 {
-    internal class RPGItem :ItemGunBase
+    class RPGItem :ItemGunBase
     {
+        public RPGItem()
+        {
+            Label = "rpg";
+            Id = 1;
+            Description = "Boom and foon";
+        }
+
         public override void Shoot(World world, Vector2 startPos, Vector2 aimPos)
         {
             RPGProjectileEntity rocket = new RPGProjectileEntity("rocket",world,aimPos-startPos);

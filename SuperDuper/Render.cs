@@ -11,34 +11,17 @@ namespace SuperDuper
         static quadVAO quad = new quadVAO(Common.quad, Common.quad_triangles);
         static quadVAO hollowRect = new quadVAO(Common.quad, Common.hollowRectangle);
         static chunkVAO chunkVAO = new chunkVAO(null);
-        static Shader shader = new Shader("Assets/shader.vert", "Assets/shader.frag");
-        static Shader solidShader = new Shader("Assets/solid.vert", "Assets/solid.frag");
-        static Shader chunkShader = new Shader("Assets/chunk.vert", "Assets/chunk.frag");
-        static Shader pointShader = new Shader("Assets/point.vert", "Assets/point.frag");
-        static Texture no_texture = new Texture("Assets/missing.png");
-        static Texture stoneTexture = new Texture("Assets/stone.png");
+        static textVAO textVAO = new textVAO();
+        static Shader shader = new Shader("Assets/Shaders/shader.vert", "Assets/Shaders/shader.frag");
+        static Shader solidShader = new Shader("Assets/Shaders/solid.vert", "Assets/Shaders/solid.frag");
+        static Shader chunkShader = new Shader("Assets/Shaders/chunk.vert", "Assets/Shaders/chunk.frag");
+        static Shader pointShader = new Shader("Assets/Shaders/point.vert", "Assets/Shaders/point.frag");
+        static Shader hudShader = new Shader("Assets/Shaders/hud.vert", "Assets/Shaders/hud.frag");
+        static Shader textShader = new Shader("Assets/Shaders/text.vert", "Assets/Shaders/text.frag");
+        static Texture no_texture = new Texture("Assets/Textures/missing.png");
+        static Texture stoneTexture = new Texture("Assets/Textures/stone.png");
+        static Font blockLetter = new Font("Assets/Fonts/Font.png","Assets/Fonts/Font.fnt");
         public static bool chunkWireframe = false;
-        //static public void DrawEntity(EntityBase entity,float rotation) 
-        //{
-        //    shader.Use();
-        //    Matrix4 model = Matrix4.Identity* Matrix4.CreateScale(entity.width, entity.height, 1) * Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(rotation)) * Matrix4.CreateTranslation(entity.position.X,entity.position.Y,0);
-        //    shader.SetMatrix4("model", model);
-        //    shader.SetMatrix4("view",Camera.GetViewMatrix());
-        //    shader.SetMatrix4("projection",Camera.GetProjectionMatrix());
-        //    if (entity.texture != null)
-        //    {
-        //        GL.ActiveTexture(TextureUnit.Texture0);
-        //        GL.BindTexture(TextureTarget.Texture2D,entity.texture);
-        //    }
-        //    else 
-        //    {
-        //        no_texture.Use(TextureUnit.Texture0);
-        //    }
-        //
-        //    quad.Use();
-        //
-        //    GL.DrawElements(PrimitiveType.Triangles,6,DrawElementsType.UnsignedInt,0);
-        //}
         static public void DrawSprite(SpriteComponent sprite)
         {
             Transform transform = sprite.entity.GetWorldTransform();
@@ -62,7 +45,25 @@ namespace SuperDuper
             GL.DrawElements(PrimitiveType.Triangles, 6, DrawElementsType.UnsignedInt, 0);
         }
 
+        static public void DrawHUDTexture(Vector2 position,Vector2 size,Texture texture)
+        {
+            hudShader.Use();
+            Matrix4 model = Matrix4.Identity * Matrix4.CreateScale(size.X, size.Y, 1) * Matrix4.CreateTranslation(position.X, position.Y, 0);
+            hudShader.SetMatrix4("model", model);
+            if (texture != null)
+            {
+                GL.ActiveTexture(TextureUnit.Texture0);
+                texture.Use();
+            }
+            else
+            {
+                no_texture.Use(TextureUnit.Texture0);
+            }
 
+            quad.Use();
+
+            GL.DrawElements(PrimitiveType.Triangles, 6, DrawElementsType.UnsignedInt, 0);
+        }
         static public void DrawCollider(BoxColliderComponent box)
         {
             var color = Color.FromArgb(box.GetHashCode());
@@ -99,7 +100,18 @@ namespace SuperDuper
             GL.LineWidth(1);
         }
 
+        static public void DrawText(Font font,string text,int size,Vector2 pos,Vector3 color) 
+        {
+            float[] data = blockLetter.GenerateText(text,pos, size);
+            textVAO.BindData(data);
+            textShader.Use();
+            textShader.SetVector3("textColor",color);
+            blockLetter.textureAtlas.Use();
 
+            GL.DrawArrays(PrimitiveType.Triangles, 0,data.Length/4 );
+            
+
+        }
         static public void DrawChunk(Chunk chunk)
         {
 

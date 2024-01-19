@@ -9,6 +9,7 @@ namespace SuperDuper.Entities
     class EntityComponent : IDisposable
     {
         public Entity entity;
+        public bool active = true;
 
         public void Dispose()
         {
